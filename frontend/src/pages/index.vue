@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <v-btn color="primary" variant="outlined">
-      Button
-    </v-btn>
+    <video></video>
   </v-container>
 </template>
 
