@@ -19,6 +19,7 @@ class StatusEnum(str, Enum):
 
 async def add_video_data(video, payload):
     video["status"] = StatusEnum.uploaded
-    video["link"] = payload.link
+    video["link"] = payload
     _id = await vodeo_collection.insert_one(video)
-    return _id
+    print(_id.inserted_id)
+    return _id.inserted_id

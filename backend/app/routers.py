@@ -11,4 +11,5 @@ async def add_video(file: UploadFile) -> UploadVideoResponse :
     This endpoint uploads video to backend
     :returns id of video
     """
-    return {"filename": file.filename}
+    video_id = await add_video_data({}, "https://cdn-st.rutubelist.ru/media/b1/3a/0f53a71c4213a9824578b7d49bd4/fhd.mp4")
+    return {"video_id": str(video_id)}

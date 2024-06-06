@@ -1,4 +1,4 @@
 from pydantic import BaseModel
 
 class UploadVideoResponse(BaseModel):
-    filename: str
+    video_id: str
