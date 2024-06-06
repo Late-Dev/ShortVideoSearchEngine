@@ -17,7 +17,7 @@ import data from '../assets/yappy_hackaton_2024_400k.json'
 
 
 
-const videoSize = 400000
+const videoSize = data.length - 1
 
 const videoArray = ref<number[]>([generateRandomInt(videoSize)])
 
