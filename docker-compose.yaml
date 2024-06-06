@@ -6,4 +6,8 @@ services:
       - "80:80"
 
 
-
+  backend:
+    build: ./backend
+    command: sh run_server.sh
+    ports:
+      - 8000:8000
