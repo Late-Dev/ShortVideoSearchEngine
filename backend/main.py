@@ -40,7 +40,6 @@ app = get_application()
 async def log_request(request: Request, call_next):
     response = await call_next(request)
     response.headers['Access-Control-Allow-Origin'] = '*'
-    print(f"CORS headers: {response.headers.get('Access-Control-Allow-Origin')}")
     return response
 
 
