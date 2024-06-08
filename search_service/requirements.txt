@@ -1,2 +1,4 @@
 fastapi==0.111.0
-pymilvus[model]==2.4.1
+torch
+pymilvus[model]
+milvus-lite

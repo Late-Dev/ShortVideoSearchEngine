@@ -3,14 +3,13 @@ import json
 
 from pymilvus import MilvusClient
 from pymilvus.model.hybrid import BGEM3EmbeddingFunction
-from pymilvus import FieldSchema, CollectionSchema, DataType
 
 
 class SearchEngine:
     def __init__(self):
 
         self.collection_name = "search"
-        self.search_db_file = "search.db"
+        self.search_db_file = "./search.db"
         self.row_data_path = 'data.json'
         self.distance_threshold = 0.1
 
