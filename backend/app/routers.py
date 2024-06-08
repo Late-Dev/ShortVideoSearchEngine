@@ -30,7 +30,6 @@ async def get_random_video() -> list[RandomVideoResponse]:
     :returns id of video
     """
     sample = await get_random_video_data()
-    print(sample)
     return sample
 
 

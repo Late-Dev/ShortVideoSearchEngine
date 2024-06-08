@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 
-export const API_URL = "http://localhost:8000"
+export const API_URL = "https://api.omegasoft.keenetic.name"
 
 axios.defaults.baseURL = API_URL;
 
