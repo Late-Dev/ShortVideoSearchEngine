@@ -8,7 +8,7 @@ MONGO_DETAILS = f"mongodb://{mongo_user}:{mongo_passwd}@{mongo_host}:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 database = client.data
-vodeo_collection = database.get_collection("videos")
+video_collection = database.get_collection("videos")
 
 class StatusEnum(str, Enum):
     uploaded = "uploaded"
@@ -20,6 +20,17 @@ class StatusEnum(str, Enum):
 async def add_video_data(video, payload):
     video["status"] = StatusEnum.uploaded
     video["link"] = payload
-    _id = await vodeo_collection.insert_one(video)
+    _id = await video_collection.insert_one(video)
     print(_id.inserted_id)
     return _id.inserted_id
+
+async def get_random_video_data():
+    pipeline = [
+        {"$sample": {"size": 2}}  # Получаем один случайный документ
+    ] 
+    result = []
+    async for doc in video_collection.aggregate(pipeline):
+        result.append({"link": doc.get("link"), "description": doc.get("description")})
+        # return doc
+    return result
+    
