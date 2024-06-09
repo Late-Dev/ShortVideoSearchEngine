@@ -3,20 +3,28 @@ import json
 
 from pymilvus import MilvusClient
 from pymilvus.model.hybrid import BGEM3EmbeddingFunction
+from pymilvus.model.reranker import BGERerankFunction
 
 
 class SearchEngine:
-    def __init__(self):
+    def __init__(self, use_reranker=False, distance_threshold = 0.1):
 
         self.collection_name = "search"
         self.search_db_file = "./search.db"
         self.row_data_path = 'data.json'
-        self.distance_threshold = 0.1
+        self.distance_threshold = distance_threshold
+        self.use_reranker = use_reranker
 
         self.embedding_fn = BGEM3EmbeddingFunction(
             model_name='BAAI/bge-m3', # Specify the model name
             device='cpu', # Specify the device to use, e.g., 'cpu' or 'cuda:0'
             use_fp16=False # Specify whether to use fp16. Set to `False` if `device` is `cpu`.
+        )
+
+        # Define the rerank function
+        self.reranker = BGERerankFunction(
+            model_name="BAAI/bge-reranker-v2-m3",  # Specify the model name. Defaults to `BAAI/bge-reranker-v2-m3`.
+            device="cpu" # Specify the device to use, e.g., 'cpu' or 'cuda:0'
         )
 
         do_build_index = not os.path.exists(self.search_db_file) and os.path.exists(self.row_data_path)
@@ -57,9 +65,18 @@ class SearchEngine:
         result = self.client.search(
             collection_name=self.collection_name,
             data=query_embeddings,
-            limit=100,
-            output_fields=["link"],
+            limit=300,
+            output_fields=["link", "text"],
         )[0]
+
+        if self.use_reranker:
+            reranker_result = self.reranker(
+                query=query,
+                documents=[i['entity']['text'] for i in result],
+                top_k=100
+            )
+
+            result = [result[i.index] for i in reranker_result]
 
         result = [
             res['entity']['link'] 
