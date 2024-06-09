@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from shema import VideoResponse
+
 from search_engine import SearchEngine
 
 search_engine_obj = SearchEngine()
@@ -24,5 +26,5 @@ app.add_middleware(
 
 
 @app.get("/search")
-async def search(query: str):
+async def search(query: str) -> list[VideoResponse]:
     return search_engine_obj.search(query)

@@ -40,16 +40,30 @@ class SearchEngine:
         with open(data_path, 'r') as data:
             corpus = json.load(data)
 
-        embeddings = self.embedding_fn.encode_documents([line['description'] for line in corpus])
+        embeddings = self.embedding_fn.encode_documents([line['video_caption'] for line in corpus if line['video_caption']])
 
         data = [
             {
                 "link": doc['link'], 
                 "vector": vec, 
-                "text": doc['description']
+                "text": doc['video_caption'],
+                "description": doc['description'],
+
             }
-            for doc, vec in zip(corpus, embeddings['dense'])
+            for doc, vec in zip([line for line in corpus if line['video_caption']], embeddings['dense'])
         ]
+
+        # embeddings = self.embedding_fn.encode_documents([line['speech'] for line in corpus if line['speech']])
+        # data += [
+        #     {
+        #         "link": doc['link'], 
+        #         "vector": vec, 
+        #         "text": doc['speech'],
+        #         "description": doc['description'],
+
+        #     }
+        #     for doc, vec in zip([line for line in corpus if line['speech']], embeddings['dense'])
+        # ]
 
         self.client.create_collection(
             collection_name=self.collection_name,
@@ -65,8 +79,8 @@ class SearchEngine:
         result = self.client.search(
             collection_name=self.collection_name,
             data=query_embeddings,
-            limit=300,
-            output_fields=["link", "text"],
+            limit=100,
+            output_fields=["link", "text", 'description'],
         )[0]
 
         if self.use_reranker:
@@ -79,7 +93,10 @@ class SearchEngine:
             result = [result[i.index] for i in reranker_result]
 
         result = [
-            res['entity']['link'] 
+            {
+                'link':res['entity']['link'], 
+                'description':  res['entity']['description']
+            }
             for res in result 
             if res['distance'] > self.distance_threshold
         ]

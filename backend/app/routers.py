@@ -1,8 +1,9 @@
+import aiohttp
 from fastapi import APIRouter, Depends, Query, UploadFile
 
 from app.schemas import (
     UploadVideoResponse, 
-    RandomVideoResponse
+    VideoResponse
     ) 
 
 from app.videos_db import (
@@ -23,8 +24,8 @@ async def add_video(file: UploadFile) -> UploadVideoResponse:
     return {"video_id": str(video_id)}
 
 
-@router.get('/get_random_video', response_model = list[RandomVideoResponse])
-async def get_random_video() -> list[RandomVideoResponse]:
+@router.get('/get_random_video', response_model = list[VideoResponse])
+async def get_random_video() -> list[VideoResponse]:
     """
     This endpoint returns random video
     :returns id of video
@@ -32,4 +33,12 @@ async def get_random_video() -> list[RandomVideoResponse]:
     sample = await get_random_video_data()
     return sample
 
+
+@router.get('/get_video_by_query', response_model = list[VideoResponse])
+async def get_video_by_query(query: str) -> list[VideoResponse]:
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://search-service/search', params={'query': query}) as response:
+
+            result = await response.json()
+    return result
 
