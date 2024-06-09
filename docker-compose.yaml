@@ -1,0 +1,49 @@
+version: "3.4"
+services:
+  app:
+    build: "./frontend"
+    ports:
+      - "80:80"
+
+  backend:
+    build: ./backend
+    command: sh run_server.sh
+    ports:
+      - 8000:8000
+    networks:
+      - mongo_network
+    environment:
+      MONGO_HOST: mongo
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWD: ${MONGO_PASSWD}
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWD}
+    ports:
+      - 27017:27017
+    networks:
+      - mongo_network
+    restart: always
+
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWD}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_PASSWD}
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: "27017"
+    ports:
+      - "0.0.0.0:5051:8081"
+    networks:
+      - mongo_network
+    depends_on:
+      - mongo
+
+networks:
+  mongo_network:
+    driver: bridge
