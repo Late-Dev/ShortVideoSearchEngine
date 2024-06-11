@@ -12,6 +12,7 @@ services:
       - 8000:8000
     networks:
       - mongo_network
+      - search_network
     environment:
       MONGO_HOST: mongo
       MONGO_USER: ${MONGO_USER}
@@ -44,6 +45,15 @@ services:
     depends_on:
       - mongo
 
+  search-service:
+    build: ./search_service
+    environment:
+      PORT: 80
+    networks:
+      - search_network
+
 networks:
   mongo_network:
+    driver: bridge
+  search_network:
     driver: bridge
