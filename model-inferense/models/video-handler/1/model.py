@@ -31,15 +31,13 @@ class TritonPythonModel:
         output0_config = pb_utils.get_output_config_by_name(
             model_config, "AUDIO_TEXT"
         )
-        output1_config = pb_utils.get_output_config_by_name(
-            model_config, "LANGUAGE"
-        )
         # Convert Triton types to numpy types
         self.text_output_dtype = pb_utils.triton_string_to_numpy(output0_config["data_type"])
-        self.language_output_dtype = pb_utils.triton_string_to_numpy(output1_config["data_type"])
 
-        self.tmp_dir_name = f"/src/{str(uuid.uuid4())}"
+        self.tmp_dir_name = f"/src/tmp/{str(uuid.uuid4())}/"
         os.makedirs(self.tmp_dir_name, exist_ok=True)
+
+        self.languages = ["b'ru: Russian'"]
 
     def execute(self, requests) -> "List[List[pb_utils.Tensor]]":
         """
@@ -66,17 +64,18 @@ class TritonPythonModel:
 
                 # send requests to other models
                 speech_to_text_input = pb_utils.Tensor("audio_path", np.asarray([audio_path], dtype=object))
-                text_from_audio = self._call_neighboor_model("speech-to-text", ["GENERATED_OUTPUT"], [speech_to_text_input])
                 audio_language = self._call_neighboor_model("speech-detector", ["LANGUAGE"], [speech_to_text_input])
+                audio_language = np.array2string(audio_language[0])
+
+                if audio_language in self.languages:
+                    text_from_audio = self._call_neighboor_model("speech-to-text", ["GENERATED_OUTPUT"], [speech_to_text_input])
+                else:
+                    text_from_audio = "Not Russian language at video"
 
                 text_from_audio = np.asarray(text_from_audio[0], dtype=object)
-                audio_language = np.asarray(audio_language[0], dtype=object)
 
                 output_1 = pb_utils.Tensor("AUDIO_TEXT", text_from_audio.astype(self.text_output_dtype))
-                outputs_2 = pb_utils.Tensor("LANGUAGE", audio_language.astype(self.language_output_dtype))
-
-                inference_response = pb_utils.InferenceResponse(output_tensors=[output_1, outputs_2])
-
+                inference_response = pb_utils.InferenceResponse(output_tensors=[output_1])
                 responses.append(inference_response)
 
         return responses
@@ -86,7 +85,7 @@ class TritonPythonModel:
         return encoded_batch
 
     def _download_video(self, video_url: str):
-        video_path = f"{self.tmp_dir_name}/video.mp4"
+        video_path = os.path.join(self.tmp_dir_name, "video.mp4")
         response = requests.get(video_url, stream=True)
         response.raise_for_status()
         video_bytes = response.content
@@ -96,7 +95,7 @@ class TritonPythonModel:
         return video_bytes, video_path
 
     def _extract_wav_from_video(self, video_bytes: bytes):
-        audio_path = f"{self.tmp_dir_name}/audio.wav"
+        audio_path = os.path.join(self.tmp_dir_name, "audio.wav")
         input_bytesio = BytesIO(video_bytes)
         output_bytesio = BytesIO()
 
@@ -139,7 +138,7 @@ class TritonPythonModel:
         return responses
 
     def finalize(self):
-        """`finalize` is called only once when the model is being unloaded.
+        """finalize` is called only once when the model is being unloaded.
         Implementing `finalize` function is OPTIONAL. This function allows
         the model to perform any necessary clean ups before exit.
         """
