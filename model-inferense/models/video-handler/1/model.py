@@ -70,7 +70,7 @@ class TritonPythonModel:
                 if audio_language in self.languages:
                     text_from_audio = self._call_neighboor_model("speech-to-text", ["GENERATED_OUTPUT"], [speech_to_text_input])
                 else:
-                    text_from_audio = "Not Russian language at video"
+                    text_from_audio = " "
 
                 text_from_audio = np.asarray(text_from_audio[0], dtype=object)
 
