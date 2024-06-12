@@ -1,12 +1,12 @@
 import os
 import uuid
+import shutil
 import subprocess
 from io import BytesIO
 import sys
 import json
 from typing import Dict, List
 import itertools
-import random
 
 import numpy as np
 import requests
@@ -28,11 +28,15 @@ class TritonPythonModel:
         self.logger = pb_utils.Logger
 
         model_config = json.loads(args["model_config"])
-        output_config = pb_utils.get_output_config_by_name(
-            model_config, "OUTPUT"
+        output0_config = pb_utils.get_output_config_by_name(
+            model_config, "AUDIO_TEXT"
+        )
+        output1_config = pb_utils.get_output_config_by_name(
+            model_config, "LANGUAGE"
         )
         # Convert Triton types to numpy types
-        self.output_dtype = pb_utils.triton_string_to_numpy(output_config["data_type"])
+        self.text_output_dtype = pb_utils.triton_string_to_numpy(output0_config["data_type"])
+        self.language_output_dtype = pb_utils.triton_string_to_numpy(output1_config["data_type"])
 
         self.tmp_dir_name = f"/src/{str(uuid.uuid4())}"
         os.makedirs(self.tmp_dir_name, exist_ok=True)
@@ -63,11 +67,16 @@ class TritonPythonModel:
                 # send requests to other models
                 speech_to_text_input = pb_utils.Tensor("audio_path", np.asarray([audio_path], dtype=object))
                 text_from_audio = self._call_neighboor_model("speech-to-text", ["GENERATED_OUTPUT"], [speech_to_text_input])
+                audio_language = self._call_neighboor_model("speech-detector", ["LANGUAGE"], [speech_to_text_input])
 
-                outputs = np.asarray(text_from_audio[0], dtype=object)
-                outputs = pb_utils.Tensor("OUTPUT", outputs.astype(self.output_dtype))
+                text_from_audio = np.asarray(text_from_audio[0], dtype=object)
+                audio_language = np.asarray(audio_language[0], dtype=object)
 
-                inference_response = pb_utils.InferenceResponse(output_tensors=[outputs])
+                output_1 = pb_utils.Tensor("AUDIO_TEXT", text_from_audio.astype(self.text_output_dtype))
+                outputs_2 = pb_utils.Tensor("LANGUAGE", audio_language.astype(self.language_output_dtype))
+
+                inference_response = pb_utils.InferenceResponse(output_tensors=[output_1, outputs_2])
+
                 responses.append(inference_response)
 
         return responses
@@ -135,4 +144,4 @@ class TritonPythonModel:
         the model to perform any necessary clean ups before exit.
         """
         print("Cleaning up...")
-        os.rmdir(self.tmp_dir_name)
+        shutil.rmtree(self.tmp_dir_name)

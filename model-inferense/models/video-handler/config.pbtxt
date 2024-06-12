@@ -10,11 +10,18 @@ input [
 	}
 ]
 
-output {
-    name: "OUTPUT"
-    data_type: TYPE_STRING
-    dims: [ -1 ]
-}
+output [
+	{
+		name: "AUDIO_TEXT"
+		data_type: TYPE_STRING
+		dims: [ -1 ]
+	},
+	{
+		name: "LANGUAGE"
+		data_type: TYPE_STRING
+		dims: [ -1 ]
+	}
+]
 
 instance_group [{ kind: KIND_CPU }]
 
