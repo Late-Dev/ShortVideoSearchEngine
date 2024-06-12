@@ -40,8 +40,6 @@ class TritonPythonModel:
         self.model_version = "1"
         self.weights_path = os.path.join(path, self.model_version, "weights/stt_ru_conformer_transducer_large.nemo")
 
-        self.load_in_8bit = True
-
         self.model = self._get_model()
 
     def _get_model(self):
@@ -58,17 +56,20 @@ class TritonPythonModel:
         responses = []
         # for loop for batch requests (disabled in our case)
         for request in requests:
-            self.logger.log_info(f"processing request #{request.request_id()}")
-
             if request.is_cancelled():
                 responses.append(pb_utils.InferenceResponse(
                     error=pb_utils.TritonError(f"Request {request.request_id} cancelled", pb_utils.TritonError.CANCELLED)))
             else:
                 # binary data typed back to string
-                import pdb; pdb.set_trace()
-                raw_audio = pb_utils.get_input_tensor_by_name(request, "raw_audio").as_numpy()
+                b_audio_path = pb_utils.get_input_tensor_by_name(request, "audio_path").as_numpy()
+                audio_path = self._decode_batch_text_input(b_audio_path)[0]
 
-                self.logger.log_info(f"request #{request.request_id()} processed")
+                text_from_audio = self.model.transcribe([audio_path])[0][0]
+
+                outputs = np.array(text_from_audio)
+                outputs = pb_utils.Tensor("GENERATED_OUTPUT", outputs.astype(self.output_dtype))
+
+                inference_response = pb_utils.InferenceResponse(output_tensors=[outputs])
                 responses.append(inference_response)
 
         return responses

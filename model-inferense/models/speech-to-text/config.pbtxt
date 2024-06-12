@@ -1,10 +1,10 @@
 name: "speech-to-text"
-max_batch_size: 1
+max_batch_size: 0
 backend: "python"
 
 input [
 	{
-		name: "raw_audio"
+		name: "audio_path"
 		data_type: TYPE_STRING
 		dims: [ -1 ]
 	}
