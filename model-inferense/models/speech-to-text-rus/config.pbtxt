@@ -1,4 +1,4 @@
-name: "speech-to-text"
+name: "speech-to-text-rus"
 max_batch_size: 0
 backend: "python"
 

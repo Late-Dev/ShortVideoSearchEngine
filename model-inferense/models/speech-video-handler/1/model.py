@@ -68,7 +68,7 @@ class TritonPythonModel:
                 audio_language = np.array2string(audio_language[0])
 
                 if audio_language in self.languages:
-                    text_from_audio = self._call_neighboor_model("speech-to-text", ["GENERATED_OUTPUT"], [speech_to_text_input])
+                    text_from_audio = self._call_neighboor_model("speech-to-text-rus", ["GENERATED_OUTPUT"], [speech_to_text_input])
                 else:
                     text_from_audio = " "
 

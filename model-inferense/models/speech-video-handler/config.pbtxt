@@ -1,4 +1,4 @@
-name: "video-handler"
+name: "speech-video-handler"
 max_batch_size: 0
 backend: "python"
 
