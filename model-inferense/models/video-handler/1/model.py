@@ -37,7 +37,7 @@ class TritonPythonModel:
         self.tmp_dir_name = f"/src/tmp/{str(uuid.uuid4())}/"
         os.makedirs(self.tmp_dir_name, exist_ok=True)
 
-        self.languages = ["b'ru: Russian'"]
+        self.languages = ["b'ru: Russian'", "b'be: Belarusian", "b'uk: Ukrainian"]
 
     def execute(self, requests) -> "List[List[pb_utils.Tensor]]":
         """
