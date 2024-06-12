@@ -23,12 +23,22 @@ class StatusEnum(str, Enum):
     error = "error"
 
 
-async def add_video_data(video, payload):
-    video["status"] = StatusEnum.uploaded
-    video["link"] = payload.get("link")
-    video["description"] = payload.get("description", "")
+# async def add_video_data(video, payload):
+#     video["status"] = StatusEnum.uploaded
+#     video["link"] = payload.get("link")
+#     video["description"] = payload.get("description", "")
+#     _id = await video_collection.insert_one(video)
+#     print(_id.inserted_id)
+#     return _id.inserted_id
+
+async def add_video_data(data):
+    video = []
+    video["status_frames"] = StatusEnum.uploaded
+    video["status_speech"] = StatusEnum.uploaded
+    video["status_indexed"] = False
+    video["link"] = data.get("link")
+    video["description"] = data.get("description", "")
     _id = await video_collection.insert_one(video)
-    print(_id.inserted_id)
     return _id.inserted_id
 
 async def get_random_video_data():
