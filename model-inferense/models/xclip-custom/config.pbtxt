@@ -1,30 +1,30 @@
-name: "speech-detector"
+name: "xclip-custom"
 max_batch_size: 0
 backend: "python"
 
 input [
 	{
-		name: "audio_path"
+		name: "video_path"
 		data_type: TYPE_STRING
 		dims: [ -1 ]
 	}
 ]
 
 output {
-    name: "LANGUAGE"
-    data_type: TYPE_STRING
-    dims: [ -1 ]
+    name: "EMBEDDING"
+    data_type: TYPE_FP32
+    dims: [ 1024 ]
 }
 
 instance_group [
     {
       count: 1
       kind: KIND_GPU
-	  gpus: [ 0 ]
+	  gpus: [ 1 ]
 	  rate_limiter {
 	      resources [
 		    {
-			  name: "R0"
+			  name: "R1"
 		    }
 		  ]
 	  }
