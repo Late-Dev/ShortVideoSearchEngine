@@ -1,0 +1,33 @@
+name: "xclip-custom"
+max_batch_size: 0
+backend: "python"
+
+input [
+	{
+		name: "video_path"
+		data_type: TYPE_STRING
+		dims: [ -1 ]
+	}
+]
+
+output {
+    name: "EMBEDDING"
+    data_type: TYPE_FP32
+    dims: [ 1024 ]
+}
+
+instance_group [
+    {
+      count: 1
+      kind: KIND_GPU
+	  gpus: [ 1 ]
+	  rate_limiter {
+	      resources [
+		    {
+			  name: "R1"
+		    }
+		  ]
+	  }
+    }
+]
+
