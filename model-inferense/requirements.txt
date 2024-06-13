@@ -1,0 +1,4 @@
+nemo_toolkit[all]
+speechbrain
+av
+accelerate
