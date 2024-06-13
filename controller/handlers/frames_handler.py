@@ -34,4 +34,3 @@ class FramesHandler:
 
             sleep(5.0)
 
-
