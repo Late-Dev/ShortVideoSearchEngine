@@ -1,9 +1,12 @@
 from multiprocessing import Process
 
-from handlers.frames_handler import FrameHandler
+from handlers.frames_handler import build_handler as frames_handler_builder
+from handlers.speech_handler import build_handler as speech_handler_builder
+
 
 all_handlers = [
-    FrameHandler()
+    frames_handler_builder(),
+    speech_handler_builder()
 ]
 
 def main():
