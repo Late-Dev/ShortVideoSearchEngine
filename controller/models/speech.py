@@ -4,10 +4,11 @@ from dataclasses import dataclass
 import numpy as np
 import tritonclient.grpc
 
-from infrastructure.base_model import BaseModelPredictionData, BaseTritonModel
+from models.base import BaseTritonModel
 
 
-class SpeechPredictionData(BaseModelPredictionData):
+@dataclass
+class SpeechPredictionData:
     audio_text: str
 
 
@@ -37,7 +38,7 @@ class SpeechTritonModel(BaseTritonModel):
                 tritonclient.grpc.InferInput(name="video_url", shape=(self.batch_size,), datatype="BYTES"),
                 ]
 
-        inputs[0].set_data_from_numpy(np.asarray([[model_inputs.video_url]], dtype=object))
+        inputs[0].set_data_from_numpy(np.asarray([model_inputs.video_url]*self.batch_size, dtype=object))
         return inputs
 
     def _set_outputs(self) -> List:
@@ -55,6 +56,6 @@ class SpeechTritonModel(BaseTritonModel):
         outputs = self._set_outputs()
 
         response = self._request_model(inputs, outputs)
-        res = response.get_output(self.model_output_name)["data"][0]
+        res = response.as_numpy(self.model_output_name).tolist().decode()
         return SpeechPredictionData(audio_text=res)
 

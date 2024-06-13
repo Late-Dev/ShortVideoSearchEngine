@@ -2,35 +2,49 @@ import os
 from time import sleep
 from enum import Enum
 
-from pymongo import MongoClient
-
-
-class StatusEnum(str, Enum):
-    uploaded = "uploaded"
-    processing = "processing"
-    ready = "ready"
-    error = "error"
+from transport import database
+from models import xclip
 
 
 class FramesHandler:
-    def __init__(self):
-        mongo_host = os.environ["MONGO_HOST"]
-        mongo_user = os.environ["MONGO_USER"]
-        mongo_pass = os.environ["MONGO_PASSWD"]
 
-        MONGO_DETAILS = f"mongodb://{mongo_user}:{mongo_pass}@{mongo_host}:27017"
-
-        client = MongoClient(MONGO_DETAILS)
-
-        database = client.data
-
-        self.video_collection = database.get_collection("videos")
+    def __init__(self, model_interface) -> None:
+        self.model = model_interface
 
     def run(self):
         while True:
-            task = self.video_collection.find_one({'status_frames': StatusEnum.uploaded})
+            task = database.video_collection.find_one({'status_frames': database.StatusEnum.uploaded})
             if task:
-                pass
+                print(task)
+                try:
+                    database.update_task(task, {"status_frames": database.StatusEnum.processing})
+                except Exception as err:
+                    error = f"Task name {task.get('name')} not loaded \n Error: {err}"
+                    print(error)
+                    database.update_task(task, {"status_frames": database.StatusEnum.error, "error": error})
+                    continue
+                # call processing handler
+                try:
+                    model_inputs = xclip.XclipModelInputs(video_url=task["link"])
+                    preds = self.model(model_inputs)
+                    print(preds)
+                    database.update_task(task, {"status_frames": database.StatusEnum.ready, "video_embedding": preds.embedding})
+                except Exception as err:
+                    error = f"Error while processing task name: {task.get('name')} \n Error: {err}"
+                    print(error)
+                    database.update_task(task, {"status_frames": database.StatusEnum.error, "error": error})
+                    continue
+            else:
+                print(f"no task, sleeping {5.0}s ...")
+                sleep(5.0)
 
-            sleep(5.0)
+
+def build_handler():
+    model = xclip.XclipTritonModel(
+            triton_url="10.10.66.25:8001",
+            triton_model_name="xclip-video-handler",
+            model_version="1"
+            )
+    handler = FramesHandler(model)
+    return handler
 

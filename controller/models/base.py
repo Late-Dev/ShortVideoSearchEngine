@@ -8,14 +8,6 @@ import tritonclient.grpc
 import tritonclient.utils
 from socket import error as socket_error
 
-@dataclass
-class BaseModelPredictionData(ABC):
-    model_prediction: Any
-
-    @property
-    def as_dict(self):
-        return asdict(self)
-
 
 class BaseTritonModel:
 
@@ -69,7 +61,7 @@ class BaseTritonModel:
     def _set_outputs(self) -> List:
         raise NotImplementedError("Implement this method")
 
-    def __call__(self, *Args, **Kwargs) -> BaseModelPredictionData:
+    def __call__(self, *Args, **Kwargs):
         raise NotImplementedError("Implement this method")
 
     def _request_model(self, inputs: List, outputs: List):
