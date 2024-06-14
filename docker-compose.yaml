@@ -60,6 +60,11 @@ services:
       MONGO_PASSWD: ${MONGO_PASSWD}
     networks:
       - mongo_network
+  #   depends_on:
+  #     - model
+
+  # model:
+  #   build: ./model-inferense
 
 
 networks:

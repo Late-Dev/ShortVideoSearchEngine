@@ -39,8 +39,17 @@ app = get_application()
 @app.middleware("http")
 async def log_request(request: Request, call_next):
     response = await call_next(request)
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
+
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    return {
+        "allowed_methods": ["OPTIONS", "POST"]
+    }
 
 
 @app.exception_handler(RequestValidationError)
