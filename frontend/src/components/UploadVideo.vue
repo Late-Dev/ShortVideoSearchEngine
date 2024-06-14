@@ -1,0 +1,73 @@
+<template>
+  <v-dialog max-width="500">
+    <template v-slot:activator="{ props: activatorProps }">
+
+      <v-btn v-bind="activatorProps" rounded="lg" color="primary" variant="flat" icon="mdi-plus">
+      </v-btn>
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card color="secondary" title="Новое видео">
+        <v-card-subtitle>
+          Добавьте ссылку на видео и описание
+        </v-card-subtitle>
+        <v-card-text>
+          <v-text-field v-model="link" color="primary" label="Ссылка на видео"></v-text-field>
+          <v-textarea color="primary" v-model="description" label="Описание и хэштеги"></v-textarea>
+        </v-card-text>
+
+
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="primary" text="Закрыть" @click="isActive.value = false"></v-btn>
+          <v-btn color="primary" text="Добавить" @click="sendNewVideo"></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
+</template>
+
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { addNewVideo } from '../api'
+import { Manager } from "socket.io-client";
+
+const manager = new Manager(import.meta.env.VITE_API_URL);
+
+const socket = manager.socket("/"); // main namespace
+
+socket.on("connect", () => {
+  console.log('connected')
+});
+
+
+socket.on("connect_error", (error) => {
+  if (socket.active) {
+    // temporary failure, the socket will automatically try to reconnect2
+    console.log('error, try to reconnect')
+  } else {
+    // the connection was denied by the server
+    // in that case, `socket.connect()` must be manually called in order to reconnect
+    console.log(error.message);
+  }
+});
+
+const link = ref('')
+const description = ref('')
+
+
+async function sendNewVideo() {
+  await addNewVideo({ link: link.value, description: description.value })
+}
+
+onMounted(() => {
+  socket.open()
+})
+
+onBeforeUnmount(() => {
+  socket.close()
+})
+
+</script>

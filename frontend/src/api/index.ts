@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Videos } from "../types";
 
-export const API_URL = "https://api.omegasoft.keenetic.name";
+export const API_URL = import.meta.env.VITE_API_URL;
 
 axios.defaults.baseURL = API_URL;
 

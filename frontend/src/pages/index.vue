@@ -2,41 +2,23 @@
   <v-container>
     <div>
       <div class="caption">
-        {{ disabled }} {{ data.length }} {{ activeVideoData?.description }}
+        {{ activeVideoData?.description }}
       </div>
-      <video
-        v-if="prevVideoData"
-        @wheel="onScrollWheel"
-        v-touch="{
-          up: up,
-          down: down,
-        }"
-        class="video video--prev"
-        :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
-        :src="prevVideoData?.link"
-      ></video>
-      <video
-        @wheel="onScrollWheel"
-        v-touch="{
-          up: up,
-          down: down,
-        }"
-        class="video"
-        :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
-        autoplay
-        controls
-        :src="activeVideoData?.link"
-      ></video>
-      <video
-        @wheel="onScrollWheel"
-        v-touch="{
-          up: up,
-          down: down,
-        }"
-        class="video video--next"
-        :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
-        :src="nextVideoData?.link"
-      ></video>
+      <video v-if="prevVideoData" @wheel="onScrollWheel" v-touch="{
+        up: up,
+        down: down,
+      }" class="video video--prev" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
+        :src="prevVideoData?.link"></video>
+      <video @wheel="onScrollWheel" v-touch="{
+        up: up,
+        down: down,
+      }" class="video" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }" autoplay controls
+        :src="activeVideoData?.link"></video>
+      <video @wheel="onScrollWheel" v-touch="{
+        up: up,
+        down: down,
+      }" class="video video--next" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
+        :src="nextVideoData?.link"></video>
     </div>
   </v-container>
 </template>
@@ -47,6 +29,7 @@ import { computed, onMounted, ref } from "vue";
 import { getRandomVideos } from "../api";
 
 import { Videos } from "../types";
+
 
 const data = ref<Videos[]>([]);
 
@@ -124,6 +107,7 @@ const prevVideoData = computed(() => {
   from {
     transform: translateY(0%);
   }
+
   to {
     transform: translateY(100%);
   }
@@ -133,10 +117,12 @@ const prevVideoData = computed(() => {
   from {
     transform: translateY(0%);
   }
+
   to {
     transform: translateY(-100%);
   }
 }
+
 .scroll-up {
   animation: scrollUp 0.82s ease forwards;
 }
@@ -157,6 +143,7 @@ const prevVideoData = computed(() => {
   &--next {
     top: 100%;
   }
+
   &--prev {
     top: -100%;
   }
