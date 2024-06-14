@@ -2,3 +2,5 @@ nemo_toolkit[all]
 speechbrain
 av
 accelerate
+insightface
+scikit-learn
