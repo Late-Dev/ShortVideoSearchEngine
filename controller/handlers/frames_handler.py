@@ -41,7 +41,7 @@ class FramesHandler:
 
 def build_handler():
     model = xclip.XclipTritonModel(
-            triton_url="10.10.66.25:8001",
+            triton_url=os.environ['TRITON_URL'],
             triton_model_name="xclip-video-handler",
             model_version="1"
             )
