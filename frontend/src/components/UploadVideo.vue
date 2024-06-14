@@ -34,6 +34,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { addNewVideo } from '../api'
 import { Manager } from "socket.io-client";
 
+// @ts-ignore
 const manager = new Manager(import.meta.env.VITE_API_URL);
 
 const socket = manager.socket("/"); // main namespace

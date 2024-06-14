@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { Videos } from "../types";
-
+// @ts-ignore
 export const API_URL = import.meta.env.VITE_API_URL;
 
 axios.defaults.baseURL = API_URL;

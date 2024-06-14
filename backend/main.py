@@ -7,9 +7,11 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from socketio import ASGIApp
 
 from app.routers import router
 
+from app.socket_manager import sio
 
 
 def get_application() -> FastAPI:
@@ -27,7 +29,10 @@ def get_application() -> FastAPI:
 
 
     application.include_router(router)
-
+    
+    socket_app = ASGIApp(sio, application)
+    
+    application.mount("/", socket_app)
    
     application.mount('/static', StaticFiles(directory='static'), 'static')
        
