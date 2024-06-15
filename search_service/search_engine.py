@@ -33,6 +33,12 @@ class SearchEngine:
 
         if do_build_index:
             self._build_index(self.row_data_path)
+        else:
+            self.client.create_collection(
+                collection_name=self.collection_name,
+                dimension=1024,
+                auto_id=True
+            )
 
         
     def _build_index(self, data_path: str):
