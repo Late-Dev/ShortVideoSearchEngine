@@ -7,9 +7,11 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from socketio import ASGIApp
 
 from app.routers import router
 
+from app.socket_manager import sio
 
 
 def get_application() -> FastAPI:
@@ -27,7 +29,10 @@ def get_application() -> FastAPI:
 
 
     application.include_router(router)
-
+    
+    socket_app = ASGIApp(sio, application)
+    
+    application.mount("/ws", socket_app)
    
     application.mount('/static', StaticFiles(directory='static'), 'static')
        
@@ -39,8 +44,17 @@ app = get_application()
 @app.middleware("http")
 async def log_request(request: Request, call_next):
     response = await call_next(request)
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
+
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    return {
+        "allowed_methods": ["OPTIONS", "POST", "GET"]
+    }
 
 
 @app.exception_handler(RequestValidationError)

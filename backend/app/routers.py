@@ -3,7 +3,8 @@ from fastapi import APIRouter, Depends, Query, UploadFile
 
 from app.schemas import (
     UploadVideoResponse, 
-    VideoResponse
+    VideoResponse,
+    VideoRequest
     ) 
 
 from app.videos_db import (
@@ -14,13 +15,14 @@ from app.videos_db import (
 router = APIRouter()
 
 
-@router.post('/add_video', response_model=UploadVideoResponse)
-async def add_video(file: UploadFile) -> UploadVideoResponse:
+@router.post('/index', response_model=UploadVideoResponse)
+async def add_video(payload: VideoRequest) -> UploadVideoResponse: 
     """
-    This endpoint uploads video to backend
-    :returns id of video
+    This endpoint uploads link of video and description to backend
+    :returns id of video in mongo which can be used to watch processing
     """
-    video_id = await add_video_data({}, {"link": "https://cdn-st.rutubelist.ru/media/b1/3a/0f53a71c4213a9824578b7d49bd4/fhd.mp4", "description": "nothing"})
+
+    video_id = await add_video_data(payload)
     return {"video_id": str(video_id)}
 
 
@@ -34,10 +36,10 @@ async def get_random_video() -> list[VideoResponse]:
     return sample
 
 
-@router.get('/get_video_by_query', response_model = list[VideoResponse])
-async def get_video_by_query(query: str) -> list[VideoResponse]:
+@router.get('/search', response_model = list[VideoResponse])
+async def get_video_by_query(text: str) -> list[VideoResponse]:
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://search-service/search', params={'query': query}) as response:
+        async with session.get('http://search-service/search', params={'query': text}) as response:
 
             result = await response.json()
     return result

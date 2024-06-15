@@ -7,5 +7,14 @@
 </template>
 
 <script lang="ts" setup>
-  //
+
+import { onMounted } from 'vue';
+import { useVideosStore } from './stores/videos'
+
+const videoStore = useVideosStore()
+
+onMounted(() => {
+  videoStore.socket.connect()
+})
+
 </script>

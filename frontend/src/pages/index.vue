@@ -1,116 +1,113 @@
 <template>
-  <v-container >
+  <v-container>
     <div>
-      <div class="caption"> {{ disabled }} {{data.length}} {{ activeVideoData?.description }}</div>
+      <div class="caption">
+        {{ activeVideoData?.description }}
+      </div>
       <video v-if="prevVideoData" @wheel="onScrollWheel" v-touch="{
         up: up,
-        down: down
-      }" class="video video--prev" :class="{'scroll-up': scrollUp, 'scroll-down': scrollDown}" :src="prevVideoData?.link"></video>
+        down: down,
+      }" class="video video--prev" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
+        :src="prevVideoData?.link"></video>
       <video @wheel="onScrollWheel" v-touch="{
         up: up,
-        down: down
-      }" class="video" :class="{'scroll-up': scrollUp, 'scroll-down': scrollDown}" autoplay controls :src="activeVideoData?.link"></video>
+        down: down,
+      }" class="video" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }" autoplay controls
+        :src="activeVideoData?.link"></video>
       <video @wheel="onScrollWheel" v-touch="{
         up: up,
-        down: down
-      }" class="video video--next" :class="{'scroll-up': scrollUp, 'scroll-down': scrollDown}" :src="nextVideoData?.link"></video>
+        down: down,
+      }" class="video video--next" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
+        :src="nextVideoData?.link"></video>
     </div>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from "vue";
 
-import { getRandomVideos } from '../api'
+import { getRandomVideos } from "../api";
 
-type Videos = {
-  link: string,
-  description: string
-}
+import { Videos } from "../types";
 
-const data = ref<Videos[]>([])
 
-const scrollUp = ref(false)
-const scrollDown = ref(false)
+const data = ref<Videos[]>([]);
 
-const activeVideo = ref(0)
+const scrollUp = ref(false);
+const scrollDown = ref(false);
 
-const disabled = ref(false)
+const activeVideo = ref(0);
+
+const disabled = ref(false);
 
 async function up() {
-  if(disabled.value) return
-  disabled.value = true
+  if (disabled.value) return;
+  disabled.value = true;
   if (activeVideo.value > data.value.length - 3) {
-    await addNewRandomVideos()
+    await addNewRandomVideos();
   }
 
-  scrollUp.value = true
+  scrollUp.value = true;
   setTimeout(() => {
-    scrollUp.value = false
-    activeVideo.value++
-  disabled.value = false
-  }, 800)
+    scrollUp.value = false;
+    activeVideo.value++;
+    disabled.value = false;
+  }, 800);
 }
 
 async function down() {
-  if(disabled.value) return
-  disabled.value = true
+  if (disabled.value) return;
+  disabled.value = true;
   if (activeVideo.value > 0) {
-
     // videoArray.value.pop()
-    scrollDown.value = true
+    scrollDown.value = true;
     setTimeout(() => {
-      scrollDown.value = false
-      if (activeVideo.value > 0){
-        activeVideo.value--
+      scrollDown.value = false;
+      if (activeVideo.value > 0) {
+        activeVideo.value--;
       }
-    disabled.value = false
-    }, 800)
+      disabled.value = false;
+    }, 800);
   }
 }
 
 function onScrollWheel(e) {
   if (e.wheelDelta < 0) {
-    up()
-
-  }
-  else {
-    down()
+    up();
+  } else {
+    down();
   }
 }
 
 async function addNewRandomVideos() {
-  await getRandomVideos().then((response)=>{
-    data.value = [...data.value, ...response.data]
-  })
+  await getRandomVideos().then((response) => {
+    data.value = [...data.value, ...response.data];
+  });
 }
 
-onMounted(async ()=>{
-  await addNewRandomVideos()
-})
-
-
+onMounted(async () => {
+  await addNewRandomVideos();
+});
 
 const activeVideoData = computed(() => {
-  return data.value[activeVideo.value]
-})
+  return data.value[activeVideo.value];
+});
 
 const nextVideoData = computed(() => {
-  return data.value[activeVideo.value + 1]
-})
+  return data.value[activeVideo.value + 1];
+});
 
 const prevVideoData = computed(() => {
-  return data.value[activeVideo.value - 1]
-})
-
+  return data.value[activeVideo.value - 1];
+});
 </script>
 
 <style scoped lang="scss">
-
 @keyframes scrollDown {
   from {
     transform: translateY(0%);
   }
+
   to {
     transform: translateY(100%);
   }
@@ -120,10 +117,12 @@ const prevVideoData = computed(() => {
   from {
     transform: translateY(0%);
   }
+
   to {
     transform: translateY(-100%);
   }
 }
+
 .scroll-up {
   animation: scrollUp 0.82s ease forwards;
 }
@@ -131,7 +130,6 @@ const prevVideoData = computed(() => {
 .scroll-down {
   animation: scrollDown 0.82s ease forwards;
 }
-
 
 .video {
   position: absolute;
@@ -142,11 +140,12 @@ const prevVideoData = computed(() => {
   object-fit: cover;
   transition: transform 0.8s ease;
 
-  &--next{
-    top: 100%
+  &--next {
+    top: 100%;
   }
-  &--prev{
-    top: -100%
+
+  &--prev {
+    top: -100%;
   }
 }
 

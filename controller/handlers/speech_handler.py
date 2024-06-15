@@ -40,7 +40,7 @@ class SpeechHandler:
 
 def build_handler():
     model = speech.SpeechTritonModel(
-            triton_url="10.10.66.25:8001",
+            triton_url=os.environ['TRITON_URL'],
             triton_model_name="speech-video-handler",
             model_version="1"
             )
