@@ -2,13 +2,13 @@ from multiprocessing import Process
 
 from handlers.frames_handler import build_handler as frames_handler_builder
 from handlers.speech_handler import build_handler as speech_handler_builder
-from handlers.face_handler import build_handler as face_handler_builder
+from handlers.search_handler import build_handler as search_handler_builder
 
 
 all_handlers = [
     frames_handler_builder(),
     speech_handler_builder(),
-    face_handler_builder()
+    search_handler_builder()
 ]
 
 def main():
