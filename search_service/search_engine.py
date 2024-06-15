@@ -33,6 +33,12 @@ class SearchEngine:
 
         if do_build_index:
             self._build_index(self.row_data_path)
+        else:
+            self.client.create_collection(
+                collection_name=self.collection_name,
+                dimension=1024,
+                auto_id=True
+            )
 
         
     def _build_index(self, data_path: str):
@@ -102,3 +108,25 @@ class SearchEngine:
         ]
 
         return result
+
+    def add_video(self, video):
+        data = [
+            {
+                "link": video.link, 
+                "vector": video.video_embedding, 
+                "text": '',
+                "description": video.description,
+
+            }
+        ]
+        if len(video.audio_text) > 150:
+            embeddings = self.embedding_fn.encode_documents([video.audio_text])['dense'][0]
+            data.append({
+                "link": video.link, 
+                "vector": video.video_embedding, 
+                "text": video.audio_text,
+                "description": video.description,
+
+            })
+        self.client.insert(collection_name=self.collection_name, data=data)
+        return {'success': True}
