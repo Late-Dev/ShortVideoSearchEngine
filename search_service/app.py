@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from shema import VideoResponse
+from shema import VideoResponse, UploadVideo
 
 from search_engine import SearchEngine
 
@@ -28,3 +28,7 @@ app.add_middleware(
 @app.get("/search")
 async def search(query: str) -> list[VideoResponse]:
     return search_engine_obj.search(query)
+
+@app.post("/add_video")
+async def add_video(video: UploadVideo):
+    return search_engine_obj.add_video(video)
