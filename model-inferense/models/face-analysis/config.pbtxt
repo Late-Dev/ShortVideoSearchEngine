@@ -4,7 +4,7 @@ backend: "python"
 
 input [
 	{
-		name: "video_path"
+		name: "video_url"
 		data_type: TYPE_STRING
 		dims: [ -1 ]
 	}
@@ -13,7 +13,22 @@ input [
 output {
     name: "EMBEDDINGS"
     data_type: TYPE_FP32
-    dims: [ -1 ]
+    dims: [ -1, 512 ]
 }
 
-instance_group [{ kind: KIND_CPU }]
+#instance_group [{ kind: KIND_CPU }]
+instance_group [
+    {
+      count: 1
+      kind: KIND_GPU
+	  gpus: [ 1 ]
+	  rate_limiter {
+	      resources [
+		    {
+			  name: "R1"
+		    }
+		  ]
+	  }
+    }
+]
+

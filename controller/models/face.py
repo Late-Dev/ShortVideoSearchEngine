@@ -9,7 +9,7 @@ from models.base import BaseTritonModel
 
 @dataclass
 class FaceAnalysisPredictionData:
-    embeddings: str
+    embeddings: List
 
 
 @dataclass
@@ -26,7 +26,7 @@ class FaceAnalysisTritonModel(BaseTritonModel):
             model_version: str,
             ):
         super().__init__(triton_url, triton_model_name, model_version)
-        self.model_output_name = "FACE_EMBEDDINGS"
+        self.model_output_name = "EMBEDDINGS"
         self.batch_size = 1
 
     def _set_inputs(

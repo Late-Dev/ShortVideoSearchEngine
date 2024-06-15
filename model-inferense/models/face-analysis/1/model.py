@@ -21,6 +21,7 @@ except ImportError:
 from insightface.app import FaceAnalysis
 from sklearn.cluster import DBSCAN
 
+
 class TritonPythonModel:
 
     def initialize(self, args: Dict[str, str]) -> None:
@@ -37,7 +38,7 @@ class TritonPythonModel:
         # Convert Triton types to numpy types
         self.output_dtype = pb_utils.triton_string_to_numpy(output0_config["data_type"])
 
-        self.providers: List[str] = ["CPUExecutionProvider"]
+        self.providers: List[str] = ["CUDAExecutionProvider"]
         self.allowed_modules: List[str] = ["detection", "landmark_3d_68", "landmark_2d_106", "recognition"]
         self.frame_size: List[int] = [640, 640]
         self.model_version = "1"
@@ -48,7 +49,7 @@ class TritonPythonModel:
         model = FaceAnalysis(name=self.models_name, providers=self.providers, allowed_modules=self.allowed_modules)
         model.prepare(ctx_id=0, det_size=self.frame_size)
         return model
-    
+
     def execute(self, requests) -> "List[List[pb_utils.Tensor]]":
         """
         Parse and tokenize each request
@@ -76,9 +77,10 @@ class TritonPythonModel:
                     all_embeddings.extend([face.embedding for face in faces])
 
                 unique_embeddings = self._get_unique_embeddings_dbscan(all_embeddings) # List[np.ndarray]
-                unique_embeddings = [pb_utils.Tensor("EMBEDDINGS", embedding.astype(self.output_dtype)) for embedding in unique_embeddings]
+                outputs = np.array(unique_embeddings)
+                outputs = pb_utils.Tensor("EMBEDDINGS", outputs.astype(self.output_dtype))
 
-                inference_response = pb_utils.InferenceResponse(output_tensors=[unique_embeddings])
+                inference_response = pb_utils.InferenceResponse(output_tensors=[outputs])
                 responses.append(inference_response)
 
             return responses
@@ -117,7 +119,7 @@ class TritonPythonModel:
     def _get_unique_embeddings_dbscan(self, embeddings: List[np.ndarray]) -> List[np.ndarray]:
         if not embeddings:
             return []
-        
+
         clustering = DBSCAN(eps=0.5, min_samples=1, metric='cosine').fit(embeddings)
         labels = clustering.labels_
         unique_labels = set(labels) - {-1}
@@ -130,4 +132,4 @@ class TritonPythonModel:
             unique_embeddings.append(mean_embedding)
 
         return unique_embeddings
-    
+

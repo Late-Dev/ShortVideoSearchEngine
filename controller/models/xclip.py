@@ -9,7 +9,7 @@ from models.base import BaseTritonModel
 
 @dataclass
 class XclipPredictionData:
-    embedding: str
+    embedding: List[float]
 
 
 @dataclass
