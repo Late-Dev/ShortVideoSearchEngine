@@ -16,3 +16,7 @@ export function getVideosSearch(text: string) {
 export function addNewVideo(payload: Videos) {
   return axios.post("index", payload);
 }
+
+export function getSimilar(video_link: string) {
+  return axios.get("search_similar", { params: { video_link } });
+}
