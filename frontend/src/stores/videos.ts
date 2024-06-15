@@ -2,6 +2,7 @@
 import { defineStore } from "pinia";
 import { io } from "socket.io-client";
 import { ref } from "vue";
+import { VideoWithStatus } from "../types";
 
 export const useVideosStore = defineStore("videos", () => {
   const connected = ref(false);
@@ -31,5 +32,40 @@ export const useVideosStore = defineStore("videos", () => {
     }
   });
 
-  return { socket, connected };
+  const interval = ref();
+
+  const processedVideo = ref<VideoWithStatus>({
+    link: "",
+    description: "",
+    id: "",
+    frames: "uploaded",
+    speech: "uploaded",
+    indexed: "uploaded",
+  });
+
+  function subscribeOnVideo(id: string) {
+    socket.emit("status", id);
+    interval.value = setInterval(() => {
+      socket.emit("status", id);
+    }, 3000);
+  }
+
+  function unsubscribe() {
+    clearInterval(interval.value);
+    processedVideo.value = {
+      link: "",
+      description: "",
+      id: "",
+      frames: "uploaded",
+      speech: "uploaded",
+      indexed: "uploaded",
+    };
+  }
+
+  socket.on("status_response", (response) => {
+    console.log(response);
+    processedVideo.value = { ...processedVideo.value, ...response };
+  });
+
+  return { socket, connected, subscribeOnVideo, unsubscribe, processedVideo };
 });
