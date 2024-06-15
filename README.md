@@ -7,7 +7,11 @@
 MONGO_USER=admin
 MONGO_PASSWD=admin
 ```
+2. create /frontend/.env
+```
+VITE_API_URL=<backend_url_with_port>
+```
 
-2. Unpack models in project root directory
+3. Unpack models in project root directory
 
-3. Run ```docker compose --env-file .env up --build```
+4. Run ```docker compose --env-file .env up --build```
