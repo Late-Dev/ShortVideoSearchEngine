@@ -9,10 +9,10 @@ export function getRandomVideos() {
   return axios.get("/get_random_video");
 }
 
-export function getVideosSearch(query: string) {
-  return axios.get("/get_video_by_query", { params: { query } });
+export function getVideosSearch(text: string) {
+  return axios.get("/search", { params: { text } });
 }
 
 export function addNewVideo(payload: Videos) {
-  return axios.post("add_video", payload);
+  return axios.post("index", payload);
 }

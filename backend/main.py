@@ -32,7 +32,7 @@ def get_application() -> FastAPI:
     
     socket_app = ASGIApp(sio, application)
     
-    application.mount("/", socket_app)
+    application.mount("/ws", socket_app)
    
     application.mount('/static', StaticFiles(directory='static'), 'static')
        

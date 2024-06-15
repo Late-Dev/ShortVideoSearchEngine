@@ -1,18 +1,23 @@
 // Utilities
 import { defineStore } from "pinia";
-import { Manager } from "socket.io-client";
+import { io } from "socket.io-client";
 import { ref } from "vue";
 
-export const useAppStore = defineStore("videos", () => {
-  // @ts-ignore
-  const manager = new Manager(import.meta.env.VITE_API_URL);
-
+export const useVideosStore = defineStore("videos", () => {
   const connected = ref(false);
 
-  const socket = manager.socket("/"); // main namespace
+  // @ts-ignore
+  const socket = io(import.meta.env.VITE_API_URL, {
+    path: "/ws/socket.io/",
+    transports: ["websocket"],
+  });
 
   socket.on("connect", () => {
-    console.log("connected");
+    connected.value = true;
+  });
+
+  socket.on("disconnect", () => {
+    connected.value = false;
   });
 
   socket.on("connect_error", (error) => {
@@ -26,5 +31,5 @@ export const useAppStore = defineStore("videos", () => {
     }
   });
 
-  return { socket };
+  return { socket, connected };
 });
