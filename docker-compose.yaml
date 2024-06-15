@@ -51,6 +51,7 @@ services:
       PORT: 80
     networks:
       - search_network
+    restart: always
     
   search-face-service:
     build: ./search_face_service
@@ -58,6 +59,7 @@ services:
       PORT: 80
     networks:
       - search_network
+    restart: always
 
   controller:
     build: ./controller

@@ -50,3 +50,12 @@ async def get_video_by_query(text: str) -> list[VideoResponse]:
             result += await response.json()
     return result
 
+@router.get('/search_similar', response_model = list[VideoResponse])
+async def get_video_by_similar(video_link: str) -> list[VideoResponse]:
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://search-service/search_similar', params={'video_link': video_link}) as response:
+
+            result = await response.json()
+    return result
+

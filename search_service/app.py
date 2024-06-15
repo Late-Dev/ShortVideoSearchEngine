@@ -29,6 +29,10 @@ app.add_middleware(
 async def search(query: str) -> list[VideoResponse]:
     return search_engine_obj.search(query)
 
+@app.get("/search_similar")
+async def search_similar(video_link: str) -> list[VideoResponse]:
+    return search_engine_obj.search_similar(video_link)
+
 @app.post("/add_video")
 async def add_video(video: UploadVideo):
     return search_engine_obj.add_video(video)

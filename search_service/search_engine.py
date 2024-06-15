@@ -130,3 +130,35 @@ class SearchEngine:
             })
         self.client.insert(collection_name=self.collection_name, data=data)
         return {'success': True}
+
+    def search_similar(self, video_link: str):
+
+        result = self.client.query(
+            collection_name=self.collection_name,
+            filter=f"link == '{video_link}'",
+            output_fields=["vector"],
+        )
+
+        embeddings = [i['vector'] for i in result]
+
+        result = self.client.search(
+            collection_name=self.collection_name,
+            data=embeddings,
+            limit=100,
+            output_fields=["link", "text", 'description'],
+        )
+
+        all_result = []
+        for res in result:
+            all_result += res
+
+        all_result = [
+            {
+                'link': res['entity']['link'], 
+                'description':  res['entity']['description']
+            }
+            for res in reversed(sorted(all_result, key=lambda x: x['distance']))
+            if res['distance'] > self.distance_threshold
+        ]
+
+        return all_result
