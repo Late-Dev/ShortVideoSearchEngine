@@ -28,7 +28,7 @@ async def add_video_data(data):
     video = {}
     video["status_frames"] = StatusEnum.uploaded
     video["status_speech"] = StatusEnum.uploaded
-    video["status_face"] = StatusEnum.uploaded
+    video["status_face_analysis"] = StatusEnum.uploaded
     video["status_indexed_face"] = StatusEnum.uploaded
     video["status_indexed"] = StatusEnum.uploaded
     video["link"] = data.link

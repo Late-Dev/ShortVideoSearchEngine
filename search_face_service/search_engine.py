@@ -62,7 +62,8 @@ class SearchEngine:
         else:
             return []
 
-        query_embeddings = self.df_user_name[self.df_user_name['user_name'] == results].tolist()
+        query_embeddings = self.df_user_name[self.df_user_name['user_name'] == results]['embedding'].tolist()
+        query_embeddings = [json.loads(emb) for emb in query_embeddings]
 
         result = self.client.search(
             collection_name=self.collection_name,
