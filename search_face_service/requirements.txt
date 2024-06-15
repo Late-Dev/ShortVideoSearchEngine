@@ -1,0 +1,5 @@
+fastapi==0.111.0
+pymilvus[model]==2.4.3
+milvus-lite==2.4.7
+fuzz
+pandas

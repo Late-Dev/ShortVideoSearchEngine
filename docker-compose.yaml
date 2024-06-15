@@ -51,6 +51,13 @@ services:
       PORT: 80
     networks:
       - search_network
+    
+  search-face-service:
+    build: ./search_service
+    environment:
+      PORT: 80
+    networks:
+      - search_network
 
   controller:
     build: ./controller
