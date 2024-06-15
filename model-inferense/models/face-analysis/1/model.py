@@ -38,7 +38,7 @@ class TritonPythonModel:
         # Convert Triton types to numpy types
         self.output_dtype = pb_utils.triton_string_to_numpy(output0_config["data_type"])
 
-        self.providers: List[str] = ["CUDAExecutionProvider"]
+        self.providers: List[str] = ["CPUExecutionProvider"]
         self.allowed_modules: List[str] = ["detection", "landmark_3d_68", "landmark_2d_106", "recognition"]
         self.frame_size: List[int] = [640, 640]
         self.model_version = "1"
