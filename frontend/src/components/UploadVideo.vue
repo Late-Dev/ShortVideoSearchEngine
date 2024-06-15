@@ -18,9 +18,15 @@
         <v-card-subtitle v-if="added">
           Статус обработки видео:
         </v-card-subtitle>
-        <v-card-text v-if="added">
-          <video :src="videosWS.processedVideo.link" style="height: 100px;"></video>
-          {{ videosWS.processedVideo }}
+        <v-card-text v-if="added" class="preview">
+
+          <video :src="videosWS.processedVideo.link" style="height: 200px;"></video>
+          <div class="statuses">
+            <UploadTag class="tag" label="frames" :status="videosWS.processedVideo.frames" />
+            <UploadTag class="tag" label="speech" :status="videosWS.processedVideo.speech" />
+            <UploadTag class="tag" label="index" :status="videosWS.processedVideo.indexed" />
+
+          </div>
         </v-card-text>
 
 
@@ -42,6 +48,7 @@ import { onBeforeUnmount, ref } from 'vue';
 import { addNewVideo } from '../api'
 
 import { useVideosStore } from '../stores/videos'
+import UploadTag from './UploadTag.vue';
 
 const videosWS = useVideosStore()
 
@@ -77,3 +84,21 @@ onBeforeUnmount(() => {
 
 
 </script>
+
+<style scoped lang="scss">
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statuses {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.tag{
+  margin: 5px 0;
+}
+</style>

@@ -2,6 +2,7 @@
 import { defineStore } from "pinia";
 import { io } from "socket.io-client";
 import { ref } from "vue";
+import { VideoWithStatus } from "../types";
 
 export const useVideosStore = defineStore("videos", () => {
   const connected = ref(false);
@@ -33,16 +34,17 @@ export const useVideosStore = defineStore("videos", () => {
 
   const interval = ref();
 
-  const processedVideo = ref({
+  const processedVideo = ref<VideoWithStatus>({
     link: "",
     description: "",
     id: "",
-    frames: "",
-    speech: "",
-    indexed: "",
+    frames: "uploaded",
+    speech: "uploaded",
+    indexed: "uploaded",
   });
 
   function subscribeOnVideo(id: string) {
+    socket.emit("status", id);
     interval.value = setInterval(() => {
       socket.emit("status", id);
     }, 3000);
@@ -54,9 +56,9 @@ export const useVideosStore = defineStore("videos", () => {
       link: "",
       description: "",
       id: "",
-      frames: "",
-      speech: "",
-      indexed: "",
+      frames: "uploaded",
+      speech: "uploaded",
+      indexed: "uploaded",
     };
   }
 
