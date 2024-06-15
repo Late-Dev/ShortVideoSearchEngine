@@ -1,5 +1,5 @@
 import os
-from time import sleep
+from time import sleep, time
 from enum import Enum
 
 import requests
@@ -21,6 +21,7 @@ class SearchHandler:
             })
             if task:
                 try:
+                    start_time = time()
                     data = {
                         'link': task['link'],
                         'description': task['description'],
@@ -29,7 +30,10 @@ class SearchHandler:
                     }
                     response = requests.post(f'{os.environ["SEARCH_SERVICE"]}/add_video', json=data)
                     if response.status_code == 200:
-                        database.update_task(task, {"status_indexed": database.StatusEnum.ready})
+                        database.update_task(task, {
+                            "status_indexed": database.StatusEnum.ready,
+                            "duration_indexed": time() - start_time
+                        })
                     else:
                         database.update_task(task, {"status_indexed": database.StatusEnum.error, "error": response.text})
                 except Exception as err:
