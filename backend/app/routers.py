@@ -38,8 +38,23 @@ async def get_random_video() -> list[VideoResponse]:
 
 @router.get('/search', response_model = list[VideoResponse])
 async def get_video_by_query(text: str) -> list[VideoResponse]:
+    result = []
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://search-face-service/search_face', params={'query': text}) as response:
+
+            result += await response.json()
+
     async with aiohttp.ClientSession() as session:
         async with session.get('http://search-service/search', params={'query': text}) as response:
+
+            result += await response.json()
+    return result
+
+@router.get('/search_similar', response_model = list[VideoResponse])
+async def get_video_by_similar(video_link: str) -> list[VideoResponse]:
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://search-service/search_similar', params={'video_link': video_link}) as response:
 
             result = await response.json()
     return result

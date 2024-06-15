@@ -51,6 +51,15 @@ services:
       PORT: 80
     networks:
       - search_network
+    restart: always
+    
+  search-face-service:
+    build: ./search_face_service
+    environment:
+      PORT: 80
+    networks:
+      - search_network
+    restart: always
 
   controller:
     build: ./controller
@@ -60,6 +69,7 @@ services:
       MONGO_PASSWD: ${MONGO_PASSWD}
       TRITON_URL: model-inference:8001
       SEARCH_SERVICE: http://search-service
+      SEARCH_SERVICE_FACE: http://search-face-service
     networks:
       - mongo_network
       - inference_network

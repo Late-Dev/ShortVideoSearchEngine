@@ -8,16 +8,16 @@ from models.base import BaseTritonModel
 
 
 @dataclass
-class XclipPredictionData:
-    embedding: List[float]
+class FaceAnalysisPredictionData:
+    embeddings: List
 
 
 @dataclass
-class XclipModelInputs:
+class FaceAnalysisModelInputs:
     video_url: str
 
 
-class XclipTritonModel(BaseTritonModel):
+class FaceAnalysisTritonModel(BaseTritonModel):
 
     def __init__(
             self,
@@ -26,12 +26,12 @@ class XclipTritonModel(BaseTritonModel):
             model_version: str,
             ):
         super().__init__(triton_url, triton_model_name, model_version)
-        self.model_output_name = "EMBEDDING"
+        self.model_output_name = "EMBEDDINGS"
         self.batch_size = 1
 
     def _set_inputs(
             self,
-            model_inputs: XclipModelInputs
+            model_inputs: FaceAnalysisModelInputs
             ) -> List:
 
         inputs = [
@@ -49,13 +49,12 @@ class XclipTritonModel(BaseTritonModel):
 
     def __call__(
             self,
-            model_inputs: XclipModelInputs
-            ) -> XclipPredictionData:
+            model_inputs: FaceAnalysisModelInputs
+            ) -> FaceAnalysisPredictionData:
 
         inputs = self._set_inputs(model_inputs)
         outputs = self._set_outputs()
 
         response = self._request_model(inputs, outputs)
         res = response.as_numpy(self.model_output_name).tolist()
-        return XclipPredictionData(embedding=res)
-
+        return FaceAnalysisPredictionData(embeddings=res)
