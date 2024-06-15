@@ -5,15 +5,20 @@
     </v-main>
     <v-toolbar class="toolbar--mobile">
       <v-row class="justify-center">
-        <v-btn rounded="lg" color="primary" variant="flat" icon="mdi-plus">
-        </v-btn>
+        <UploadVideo></UploadVideo>
+
       </v-row>
     </v-toolbar>
   </v-app>
 </template>
 
+<script setup>
+import UploadVideo from '../components/UploadVideo.vue'
+
+</script>
+
 <style scoped lang="scss">
-.toolbar--mobile{
+.toolbar--mobile {
   position: fixed;
   bottom: 0;
 }
