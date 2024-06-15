@@ -31,5 +31,39 @@ export const useVideosStore = defineStore("videos", () => {
     }
   });
 
-  return { socket, connected };
+  const interval = ref();
+
+  const processedVideo = ref({
+    link: "",
+    description: "",
+    id: "",
+    frames: "",
+    speech: "",
+    indexed: "",
+  });
+
+  function subscribeOnVideo(id: string) {
+    interval.value = setInterval(() => {
+      socket.emit("status", id);
+    }, 3000);
+  }
+
+  function unsubscribe() {
+    clearInterval(interval.value);
+    processedVideo.value = {
+      link: "",
+      description: "",
+      id: "",
+      frames: "",
+      speech: "",
+      indexed: "",
+    };
+  }
+
+  socket.on("status_response", (response) => {
+    console.log(response);
+    processedVideo.value = { ...processedVideo.value, ...response };
+  });
+
+  return { socket, connected, subscribeOnVideo, unsubscribe, processedVideo };
 });

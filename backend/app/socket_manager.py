@@ -1,4 +1,5 @@
 import socketio
+from app.videos_db import get_video_by_id
 
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*", logger=True, engineio_logger=True)
 
@@ -10,6 +11,14 @@ async def connect(sid, environ, auth):
 async def disconnect(sid):
     print('disconnect ', sid)
 
-@sio.on('*')
-async def catch_all(event, sid, data):
-    print(f'Event: {event}, SID: {sid}, Data: {data}')
+@sio.event
+async def status(event, _id):
+    print(f'Event: {event}, SID: {_id}')
+    video = await get_video_by_id(_id) 
+    await sio.emit('status_response', 
+                   {
+                       "frames": video.get("status_frames"),
+                       "speech": video.get("status_speech"),
+                       "indexed":video.get("status_indexed")
+                       })
+    
