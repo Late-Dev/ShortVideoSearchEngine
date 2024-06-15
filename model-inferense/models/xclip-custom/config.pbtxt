@@ -16,18 +16,19 @@ output {
     dims: [ 1024 ]
 }
 
-instance_group [
-    {
-      count: 1
-      kind: KIND_GPU
-	  gpus: [ 1 ]
-	  rate_limiter {
-	      resources [
-		    {
-			  name: "R1"
-		    }
-		  ]
-	  }
-    }
-]
+instance_group [{ kind: KIND_CPU }]
+#instance_group [
+#    {
+#      count: 1
+#      kind: KIND_GPU
+#	  gpus: [ 1 ]
+#	  rate_limiter {
+#	      resources [
+#		    {
+#			  name: "R1"
+#		    }
+#		  ]
+#	  }
+#    }
+#]
 

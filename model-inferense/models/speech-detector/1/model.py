@@ -28,7 +28,11 @@ class TritonPythonModel:
         self.logger = pb_utils.Logger
 
         model_config = json.loads(args["model_config"])
-        gpu_id = model_config["instance_group"][0]["gpus"][0]
+        try:
+            gpu_id = model_config["instance_group"][0]["gpus"][0]
+        except Exception as err:
+            gpu_id = None
+        self.device_map = f"cuda:{gpu_id}" if gpu_id != None else "cpu"
         output_config = pb_utils.get_output_config_by_name(
             model_config, "LANGUAGE"
         )
