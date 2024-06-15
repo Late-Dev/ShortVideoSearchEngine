@@ -1,5 +1,5 @@
 import os
-from time import sleep
+from time import sleep, time
 from enum import Enum
 
 from transport import database
@@ -25,9 +25,14 @@ class SpeechHandler:
                     continue
                 # call processing handler
                 try:
+                    start_time = time()
                     model_inputs = speech.SpeechModelInputs(video_url=task["link"])
                     preds = self.model(model_inputs)
-                    database.update_task(task, {"status_speech": database.StatusEnum.ready, "audio_text": preds.audio_text})
+                    database.update_task(task, {
+                        "status_speech": database.StatusEnum.ready, 
+                        "audio_text": preds.audio_text,
+                        "duration_speech": time() - start_time,
+                    })
                 except Exception as err:
                     error = f"Error while processing task name: {task.get('name')} \n Error: {err}"
                     print(error)

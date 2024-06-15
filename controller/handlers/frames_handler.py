@@ -1,5 +1,5 @@
 import os
-from time import sleep
+from time import sleep, time
 from enum import Enum
 
 from transport import database
@@ -25,10 +25,14 @@ class FramesHandler:
                     continue
                 # call processing handler
                 try:
+                    start_time = time()
                     model_inputs = xclip.XclipModelInputs(video_url=task["link"])
                     preds = self.model(model_inputs)
-                    print(preds)
-                    database.update_task(task, {"status_frames": database.StatusEnum.ready, "video_embedding": preds.embedding})
+                    database.update_task(task, {
+                        "status_frames": database.StatusEnum.ready, 
+                        "video_embedding": preds.embedding,
+                        "duration_frames": time() - start_time
+                    })
                 except Exception as err:
                     error = f"Error while processing task name: {task.get('name')} \n Error: {err}"
                     print(error)

@@ -66,12 +66,15 @@ services:
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWD: ${MONGO_PASSWD}
       TRITON_URL: model-inference:8001
+      SEARCH_SERVICE: http://search-service
     networks:
       - mongo_network
       - inference_network
+      - search_network
     depends_on:
       - mongo
       - model-inference
+      - search-service
     restart: always
 
   model-inference:

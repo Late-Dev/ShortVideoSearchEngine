@@ -1,6 +1,8 @@
 import motor.motor_asyncio
 from enum import Enum
 import os 
+from bson.objectid import ObjectId
+
 
 from dotenv import load_dotenv
 
@@ -26,7 +28,7 @@ async def add_video_data(data):
     video = {}
     video["status_frames"] = StatusEnum.uploaded
     video["status_speech"] = StatusEnum.uploaded
-    video["status_indexed"] = False
+    video["status_indexed"] = StatusEnum.uploaded
     video["link"] = data.link
     video["description"] = data.description
     _id = await video_collection.insert_one(video)
@@ -41,4 +43,10 @@ async def get_random_video_data():
         result.append({"link": doc.get("link"), "description": doc.get("description")})
         # return doc
     return result
-    
+
+async def get_video_by_id(id: str):
+    video = await video_collection.find_one({"_id": ObjectId(id)} )
+    if video is not None:
+        return video
+    else:
+        assert LookupError("Video not found")
