@@ -11,7 +11,7 @@ async def load_csv_to_mongodb(file_path):
         csv_reader = csv.DictReader(file)
         tasks = []
         for row in csv_reader:
-            tasks.append(add_video_data({}, row))
+            tasks.append(add_video_data(row))
         
         await asyncio.gather(*tasks)
 

@@ -6,3 +6,7 @@ class UploadVideoResponse(BaseModel):
 class VideoResponse(BaseModel):
     link: str 
     description: str | None
+    
+class VideoRequest(BaseModel):
+    link: str 
+    description: str | None
