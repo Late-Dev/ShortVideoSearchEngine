@@ -15,7 +15,7 @@ from app.videos_db import (
 router = APIRouter()
 
 
-@router.post('/add_video', response_model=UploadVideoResponse)
+@router.post('/index', response_model=UploadVideoResponse)
 async def add_video(payload: VideoRequest) -> UploadVideoResponse: 
     """
     This endpoint uploads link of video and description to backend
@@ -36,10 +36,10 @@ async def get_random_video() -> list[VideoResponse]:
     return sample
 
 
-@router.get('/get_video_by_query', response_model = list[VideoResponse])
-async def get_video_by_query(query: str) -> list[VideoResponse]:
+@router.get('/search', response_model = list[VideoResponse])
+async def get_video_by_query(text: str) -> list[VideoResponse]:
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://search-service/search', params={'query': query}) as response:
+        async with session.get('http://search-service/search', params={'query': text}) as response:
 
             result = await response.json()
     return result

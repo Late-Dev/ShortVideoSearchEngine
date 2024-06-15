@@ -9,7 +9,7 @@
     <template v-slot:default="{ isActive }">
       <v-card color="secondary" title="Новое видео">
         <v-card-subtitle>
-          Добавьте ссылку на видео и описание
+          Добавьте ссылку на видео и описание {{ videosWS.connected }}
         </v-card-subtitle>
         <v-card-text>
           <v-text-field v-model="link" color="primary" label="Ссылка на видео"></v-text-field>
@@ -33,7 +33,9 @@
 import { ref } from 'vue';
 import { addNewVideo } from '../api'
 
+import { useVideosStore } from '../stores/videos'
 
+const videosWS = useVideosStore()
 
 const link = ref('')
 const description = ref('')
