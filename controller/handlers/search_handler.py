@@ -17,7 +17,7 @@ class SearchHandler:
             task = database.video_collection.find_one({
                 'status_speech': database.StatusEnum.ready,
                 'status_frames': database.StatusEnum.ready,
-                'status_indexed': False
+                'status_indexed': database.StatusEnum.uploaded
             })
             if task:
                 try:

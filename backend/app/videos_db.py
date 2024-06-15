@@ -26,7 +26,7 @@ async def add_video_data(data):
     video = {}
     video["status_frames"] = StatusEnum.uploaded
     video["status_speech"] = StatusEnum.uploaded
-    video["status_indexed"] = False
+    video["status_indexed"] = StatusEnum.uploaded
     video["link"] = data.link
     video["description"] = data.description
     _id = await video_collection.insert_one(video)
