@@ -10,6 +10,7 @@ import itertools
 
 import numpy as np
 import requests
+import tempfile
 
 try:
     # noinspection PyUnresolvedReferences
@@ -33,9 +34,6 @@ class TritonPythonModel:
         )
         # Convert Triton types to numpy types
         self.text_output_dtype = pb_utils.triton_string_to_numpy(output0_config["data_type"])
-
-        self.tmp_dir_name = f"/src/tmp/{str(uuid.uuid4())}/"
-        os.makedirs(self.tmp_dir_name, exist_ok=True)
 
     def execute(self, requests) -> "List[List[pb_utils.Tensor]]":
         """
@@ -74,18 +72,18 @@ class TritonPythonModel:
         return encoded_batch
 
     def _download_video(self, video_url: str):
-        video_path = os.path.join(self.tmp_dir_name, "video.mp4")
-        response = requests.get(video_url, stream=True)
-        response.raise_for_status()
-        video_bytes = response.content
-
-        self.logger.log_info(f"Downloaded video {video_url}")
-        self._write_bytes_to_disk(video_path, video_bytes)
-        return video_path
-
-    def _write_bytes_to_disk(self, file_path, file_bytes):
-        with open(file_path, 'wb') as f:
-            f.write(file_bytes)
+        try:
+            response = requests.get(video_url, stream=True)
+            response.raise_for_status()
+            temp_video_file = tempfile.NamedTemporaryFile(delete=False)
+            with temp_video_file as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+            return temp_video_file.name
+        except requests.exceptions.RequestException as e:
+            print(f"Error downloading video: {e}")
+            return None
 
     def _call_neighboor_model(self, model_name: str, output_names: List[str], input_tensors: List):
         responses = []
@@ -110,10 +108,3 @@ class TritonPythonModel:
             responses.append(out)
         return responses
 
-    def finalize(self):
-        """finalize` is called only once when the model is being unloaded.
-        Implementing `finalize` function is OPTIONAL. This function allows
-        the model to perform any necessary clean ups before exit.
-        """
-        print("Cleaning up...")
-        shutil.rmtree(self.tmp_dir_name)
