@@ -1,12 +1,13 @@
 # ShortVideoSearchEngine
 
-create .env:
+# Hot to run:
+1. create .env:
 
-```bash
+```
 MONGO_USER=admin
 MONGO_PASSWD=admin
 ```
 
-run docker compose:
+2. Unpack models in project root directory
 
-`docker compose up --build -d`
+3. Run ```docker compose --env-file .env up --build```

@@ -58,17 +58,29 @@ services:
       MONGO_HOST: mongo
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWD: ${MONGO_PASSWD}
+      TRITON_URL: model-inference:8001
     networks:
       - mongo_network
-  #   depends_on:
-  #     - model
+      - inference_network
+    depends_on:
+      - mongo
+      - model-inference
+    restart: always
 
-  # model:
-  #   build: ./model-inferense
-
+  model-inference:
+    build: ./model-inference
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./models:/models
+    networks:
+      - inference_network
+    restart: always
 
 networks:
   mongo_network:
     driver: bridge
   search_network:
+    driver: bridge
+  inference_network:
     driver: bridge
