@@ -53,7 +53,7 @@ async def log_request(request: Request, call_next):
 @app.options("/{path:path}")
 async def options_handler(path: str):
     return {
-        "allowed_methods": ["OPTIONS", "POST"]
+        "allowed_methods": ["OPTIONS", "POST", "GET"]
     }
 
 

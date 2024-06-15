@@ -30,30 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { addNewVideo } from '../api'
-import { Manager } from "socket.io-client";
-
-// @ts-ignore
-const manager = new Manager(import.meta.env.VITE_API_URL);
-
-const socket = manager.socket("/"); // main namespace
-
-socket.on("connect", () => {
-  console.log('connected')
-});
 
 
-socket.on("connect_error", (error) => {
-  if (socket.active) {
-    // temporary failure, the socket will automatically try to reconnect2
-    console.log('error, try to reconnect')
-  } else {
-    // the connection was denied by the server
-    // in that case, `socket.connect()` must be manually called in order to reconnect
-    console.log(error.message);
-  }
-});
 
 const link = ref('')
 const description = ref('')
@@ -63,12 +43,5 @@ async function sendNewVideo() {
   await addNewVideo({ link: link.value, description: description.value })
 }
 
-onMounted(() => {
-  socket.open()
-})
-
-onBeforeUnmount(() => {
-  socket.close()
-})
 
 </script>
