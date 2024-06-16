@@ -29,6 +29,10 @@ app.add_middleware(
 async def search(query: str) -> list[VideoResponse]:
     return search_engine_obj.search(query)
 
+@app.get("/random_search")
+async def random_search() -> list[VideoResponse]:
+    return search_engine_obj.random_search()
+
 @app.get("/search_similar")
 async def search_similar(video_link: str) -> list[VideoResponse]:
     return search_engine_obj.search_similar(video_link)

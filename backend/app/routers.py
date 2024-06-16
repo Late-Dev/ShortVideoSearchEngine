@@ -32,8 +32,18 @@ async def get_random_video() -> list[VideoResponse]:
     This endpoint returns random video
     :returns id of video
     """
-    sample = await get_random_video_data()
-    return sample
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://search-service/random_search') as response:
+
+            result = await response.json()
+
+    used_links = set()
+    final_result = []
+    for i in result:
+        if i['link'] not in used_links:
+            final_result.append(i)
+            used_links.add(i['link'])
+    return final_result
 
 
 @router.get('/search', response_model = list[VideoResponse])
@@ -48,7 +58,14 @@ async def get_video_by_query(text: str) -> list[VideoResponse]:
         async with session.get('http://search-service/search', params={'query': text}) as response:
 
             result += await response.json()
-    return result
+
+    used_links = set()
+    final_result = []
+    for i in result:
+        if i['link'] not in used_links:
+            final_result.append(i)
+            used_links.add(i['link'])
+    return final_result
 
 @router.get('/search_similar', response_model = list[VideoResponse])
 async def get_video_by_similar(video_link: str) -> list[VideoResponse]:
@@ -57,5 +74,12 @@ async def get_video_by_similar(video_link: str) -> list[VideoResponse]:
         async with session.get('http://search-service/search_similar', params={'video_link': video_link}) as response:
 
             result = await response.json()
-    return result
+
+    used_links = set()
+    final_result = []
+    for i in result:
+        if i['link'] not in used_links:
+            final_result.append(i)
+            used_links.add(i['link'])
+    return final_result
 

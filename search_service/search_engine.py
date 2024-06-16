@@ -1,6 +1,8 @@
 import os
 import json
 
+import random
+
 from pymilvus import MilvusClient
 from pymilvus.model.hybrid import BGEM3EmbeddingFunction
 from pymilvus.model.reranker import BGERerankFunction
@@ -105,6 +107,26 @@ class SearchEngine:
             }
             for res in result 
             if res['distance'] > self.distance_threshold
+        ]
+
+        return result
+
+    def random_search(self):
+        query_embeddings = [[random.random() * 2 - 1 for _ in range(1024)]]
+
+        result = self.client.search(
+            collection_name=self.collection_name,
+            data=query_embeddings,
+            limit=100,
+            output_fields=["link", "text", 'description'],
+        )[0]
+
+        result = [
+            {
+                'link':res['entity']['link'], 
+                'description':  res['entity']['description']
+            }
+            for res in result
         ]
 
         return result
