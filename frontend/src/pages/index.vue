@@ -150,6 +150,12 @@ const prevVideoData = computed(() => {
   &--prev {
     top: -100%;
   }
+
+  @media screen and (min-width: 700px) {
+    height: 100vh;
+    width: 50vw;
+    left: calc(50% - 25vw);
+  }
 }
 
 .caption {
