@@ -3,7 +3,7 @@
     <v-main>
       <router-view />
     </v-main>
-    <v-toolbar class="toolbar--mobile">
+    <v-toolbar class="toolbar--mobile" style="position: fixed; bottom: 0;">
       <v-row class="justify-space-around">
         <v-btn icon="mdi-magnify" v-if="$route.path === '/'" @click="router.push('/search')"></v-btn>
         <v-btn icon="mdi-home" v-if="$route.path !== '/'" @click="router.push('/')"></v-btn>
@@ -31,10 +31,11 @@ const router = useRouter()
     display: none;
   }
 
-  &--mobile {
-    @media screen and (min-width: 1020px) {
-      display: none;
-    }
-  }
+  // &--mobile {
+  //   @media screen and (min-width: 1020px) {
+  //     display: none;
+  //   }
+  // }
 }
+
 </style>

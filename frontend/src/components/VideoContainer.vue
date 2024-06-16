@@ -1,7 +1,7 @@
 <template>
 
 
-  <v-container class="overflow-y-auto" style="max-height: calc(100vh - 150px)">
+  <v-container class="overflow-y-auto" style="max-height: calc(100vh - 50px)">
     <v-row>
       <v-col v-for="item in videos" :key="item.link">
         <div style="display: flex; position: relative; justify-content: center;">
