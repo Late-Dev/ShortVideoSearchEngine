@@ -141,6 +141,9 @@ class SearchEngine:
 
         embeddings = [i['vector'] for i in result]
 
+        if len(embeddings) == 0:
+            return []
+
         result = self.client.search(
             collection_name=self.collection_name,
             data=embeddings,
