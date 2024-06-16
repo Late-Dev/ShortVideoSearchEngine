@@ -56,7 +56,8 @@ class SearchEngine:
 
     def search(self, query: str):
 
-        results = process.extractBests(query, self.users_name, scorer=fuzz.ratio, score_cutoff=0.7)
+        results = process.extractBests(query, self.users_name, scorer=fuzz.ratio, score_cutoff=70)
+        
         if results:
             results = results[0][0]
         else:
