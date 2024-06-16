@@ -19,6 +19,11 @@ async def status(event, _id):
                    {
                        "frames": video.get("status_frames"),
                        "speech": video.get("status_speech"),
-                       "indexed":video.get("status_indexed")
+                       "indexed":video.get("status_indexed"),
+                       "faces":video.get("status_face_analysis"),
+                       "indexed_faces":video.get("status_indexed_face"),
+                       "duration_speech":video.get("duration_speech"),
+                       "duration_indexed":video.get("duration_indexed"),
+                       "duration_frames":video.get("duration_frames")
                        })
     

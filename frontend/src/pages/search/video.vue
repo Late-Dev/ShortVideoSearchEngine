@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { getSimilar } from '../../api';
 
@@ -14,5 +14,10 @@ const videos = ref()
 
 onMounted(async () => {
   await getSimilar(route.query.url as string).then((response) => { videos.value = response.data })
+})
+
+watch(() => route.params, async () => {
+  await getSimilar(route.query.url as string).then((response) => { videos.value = response.data })
+
 })
 </script>

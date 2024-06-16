@@ -5,7 +5,7 @@
       <v-icon color="green-darken-2" v-if="status === 'ready'" icon="mdi-check" size="large"></v-icon>
       <v-icon color="error" v-if="status === 'error'" icon="mdi-alert-circle" size="large"></v-icon>
 
-    </v-progress-circular> {{ label }} {{ status }}
+    </v-progress-circular> {{ label }} {{ status }} {{ durationRound(duration) }} {{ duration ? 'сек' : '' }}
   </div>
 </template>
 <script setup lang="ts">
@@ -14,7 +14,8 @@ import { Status } from '../types'
 
 type Props = {
   label: string
-  status: Status
+  status: Status,
+  duration?: number
 }
 
 const statusColor = computed(() => {
@@ -31,4 +32,10 @@ const statusColor = computed(() => {
 })
 
 const props = defineProps<Props>()
+
+function durationRound(num) {
+  if (!num) return
+  return Math.round(num*1000)/1000
+}
+
 </script>

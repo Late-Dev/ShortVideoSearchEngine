@@ -8,7 +8,7 @@
         <v-btn icon="mdi-magnify" v-if="$route.path === '/'" @click="router.push('/search')"></v-btn>
         <v-btn icon="mdi-home" v-if="$route.path !== '/'" @click="router.push('/')"></v-btn>
         <UploadVideo></UploadVideo>
-        <div></div>
+        <div style="width: 48px;"></div>
       </v-row>
     </v-toolbar>
   </v-app>

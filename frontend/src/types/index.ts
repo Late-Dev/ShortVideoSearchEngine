@@ -12,4 +12,9 @@ export type VideoWithStatus = {
   frames: Status;
   speech: Status;
   indexed: Status;
+  faces: Status;
+  indexed_faces: Status;
+  duration_frames: number;
+  duration_speech: number;
+  duration_indexed: number;
 };
