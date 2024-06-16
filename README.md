@@ -2,7 +2,7 @@
 
 Это поисковый движок по коротким видео, который может искать видеоролики по описанию визуальной части видеои и по тому, что обсуждается голосом, а также искать ролики с известными людьми. Решение может работать с запросами на разных языках
 
-[![Демонстрация решения](https://markdown-videos-api.jorgenkh.no/youtube/fF6dPa-ulEs)]([https://youtu.be/fF6dPa-ulEs](https://www.youtube.com/watch?v=fF6dPa-ulEs))
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/fF6dPa-ulEs/0.jpg)](https://www.youtube.com/watch?v=fF6dPa-ulEs)
 
 # Как запустить решение:
 1. Создать основной .env файл в корне проекта со следующими переменными:
