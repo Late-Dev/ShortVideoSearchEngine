@@ -20,6 +20,9 @@
       }" class="video video--next" :class="{ 'scroll-up': scrollUp, 'scroll-down': scrollDown }"
         :src="nextVideoData?.link"></video>
     </div>
+    <v-fab icon="mdi-movie-search-outline" @click="$router.push('/search/video?url=' + activeVideoData.link)"
+      location="bottom end" style="bottom: 200px;" absolute app appear></v-fab>
+
   </v-container>
 </template>
 

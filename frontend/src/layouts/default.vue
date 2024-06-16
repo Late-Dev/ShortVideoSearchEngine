@@ -3,19 +3,12 @@
     <v-main>
       <router-view />
     </v-main>
-    <v-app-bar color="transparent" elevation="0" class="toolbar--mobile">
-      <template v-slot:append>
-        <v-btn icon="mdi-heart"></v-btn>
-
-        <v-btn icon="mdi-magnify" @click="router.push('/search')"></v-btn>
-
-        <v-btn icon="mdi-dots-vertical"></v-btn>
-      </template>
-    </v-app-bar>
-    <v-toolbar class="toolbar--mobile">
-      <v-row class="justify-center">
+    <v-toolbar class="toolbar--mobile" style="position: fixed; bottom: 0;">
+      <v-row class="justify-space-around">
+        <v-btn icon="mdi-magnify" v-if="$route.path === '/'" @click="router.push('/search')"></v-btn>
+        <v-btn icon="mdi-home" v-if="$route.path !== '/'" @click="router.push('/')"></v-btn>
         <UploadVideo></UploadVideo>
-
+        <div></div>
       </v-row>
     </v-toolbar>
   </v-app>
@@ -38,10 +31,11 @@ const router = useRouter()
     display: none;
   }
 
-  &--mobile {
-    @media screen and (min-width: 1020px) {
-      display: none;
-    }
-  }
+  // &--mobile {
+  //   @media screen and (min-width: 1020px) {
+  //     display: none;
+  //   }
+  // }
 }
+
 </style>
