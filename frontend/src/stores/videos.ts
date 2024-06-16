@@ -41,6 +41,11 @@ export const useVideosStore = defineStore("videos", () => {
     frames: "uploaded",
     speech: "uploaded",
     indexed: "uploaded",
+    faces: "uploaded",
+    indexed_faces: "uploaded",
+    duration_frames: 0,
+    duration_speech: 0,
+    duration_indexed: 0,
   });
 
   function subscribeOnVideo(id: string) {
@@ -59,12 +64,29 @@ export const useVideosStore = defineStore("videos", () => {
       frames: "uploaded",
       speech: "uploaded",
       indexed: "uploaded",
+      faces: "uploaded",
+      indexed_faces: "uploaded",
+      duration_frames: 0,
+      duration_speech: 0,
+      duration_indexed: 0,
     };
   }
 
   socket.on("status_response", (response) => {
     console.log(response);
     processedVideo.value = { ...processedVideo.value, ...response };
+
+    if (
+      [
+        response.faces,
+        response.speech,
+        response.indexed,
+        response.faces,
+        response.indexed_faces,
+      ].every((val) => val === "ready")
+    ) {
+      unsubscribe();
+    }
   });
 
   return { socket, connected, subscribeOnVideo, unsubscribe, processedVideo };

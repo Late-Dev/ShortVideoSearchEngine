@@ -22,9 +22,14 @@
 
           <video :src="videosWS.processedVideo.link" style="height: 200px;"></video>
           <div class="statuses">
-            <UploadTag class="tag" label="frames" :status="videosWS.processedVideo.frames" />
-            <UploadTag class="tag" label="speech" :status="videosWS.processedVideo.speech" />
-            <UploadTag class="tag" label="index" :status="videosWS.processedVideo.indexed" />
+            <UploadTag class="tag" label="Визуальный анализ" :duration="videosWS.processedVideo.duration_frames"
+              :status="videosWS.processedVideo.frames" />
+            <UploadTag class="tag" label="Анализ речи" :duration="videosWS.processedVideo.duration_speech"
+              :status="videosWS.processedVideo.speech" />
+            <UploadTag class="tag" label="Распознавание лиц" :status="videosWS.processedVideo.faces" />
+            <UploadTag class="tag" label="Добавление в индекс лиц" :status="videosWS.processedVideo.indexed_faces" />
+            <UploadTag class="tag" label="Индексация" :duration="videosWS.processedVideo.duration_indexed"
+              :status="videosWS.processedVideo.indexed" />
 
           </div>
         </v-card-text>
@@ -98,7 +103,7 @@ onBeforeUnmount(() => {
   margin-top: 20px;
 }
 
-.tag{
+.tag {
   margin: 5px 0;
 }
 </style>
