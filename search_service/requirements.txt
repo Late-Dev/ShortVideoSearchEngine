@@ -1,0 +1,5 @@
+fastapi==0.111.0
+torch==2.3.1
+pymilvus[model]==2.4.3
+milvus-lite==2.4.7
+FlagEmbedding>=1.2.2
