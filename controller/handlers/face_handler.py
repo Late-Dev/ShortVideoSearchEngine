@@ -1,5 +1,5 @@
 import os
-from time import sleep
+from time import sleep, time
 from enum import Enum
 
 from transport import database
@@ -25,9 +25,14 @@ class FaceAnalysisHandler:
                     continue
                 # call processing handler
                 try:
+                    start_time = time()
                     model_inputs = face.FaceAnalysisModelInputs(video_url=task["link"])
                     preds = self.model(model_inputs)
-                    database.update_task(task, {"status_face_analysis": database.StatusEnum.ready, "face_embeddings": preds.embeddings})
+                    database.update_task(task, {
+                        "status_face_analysis": database.StatusEnum.ready, 
+                        "face_embeddings": preds.embeddings,
+                        "duration_face_analysis": time() - start_time
+                    })
                 except Exception as err:
                     error = f"Error while processing task name: {task.get('name')} \n Error: {err}"
                     print(error)
