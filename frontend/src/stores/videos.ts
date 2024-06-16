@@ -85,7 +85,7 @@ export const useVideosStore = defineStore("videos", () => {
         response.indexed_faces,
       ].every((val) => val === "ready")
     ) {
-      unsubscribe();
+      clearInterval(interval.value);
     }
   });
 
