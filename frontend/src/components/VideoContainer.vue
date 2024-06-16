@@ -8,6 +8,8 @@
           <video controls :src="item.link" :key="item.link" style=" height: 50vh; "></video>
           <div class="description">
             {{ item.description }}</div>
+          <v-fab icon="mdi-movie-search-outline" @click="$router.push('/search/video?url=' + item.link)"
+            location="bottom end" style="bottom: 200px; left: -60px;" absolute app appear></v-fab>
         </div>
       </v-col>
     </v-row>
