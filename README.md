@@ -2,7 +2,7 @@
 
 Это поисковый движок по коротким видео, который может искать видеоролики по описанию визуальной части видеои и по тому, что обсуждается голосом, а также искать ролики с известными людьми. Решение может работать с запросами на разных языках
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/fF6dPa-ulEs/0.jpg)](https://www.youtube.com/watch?v=fF6dPa-ulEs)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fF6dPa-ulEs?si=_3OT0mnlbgVIRuKH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 # Как запустить решение:
 1. Создать основной .env файл в корне проекта со следующими переменными:
