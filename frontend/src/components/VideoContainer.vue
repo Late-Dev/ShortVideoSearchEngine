@@ -29,6 +29,7 @@ defineProps(['videos'])
   bottom: 80px;
   text-align: center;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 10px
+  border-radius: 10px;
+  overflow-wrap: break-word;
 }
 </style>
