@@ -7,7 +7,7 @@ from thefuzz import fuzz, process
 
 
 class SearchEngine:
-    def __init__(self, use_reranker=False, distance_threshold = 0.1):
+    def __init__(self, use_reranker=False, distance_threshold = 0.3):
 
         self.collection_name = "search"
         self.search_db_file = "./search.db"
