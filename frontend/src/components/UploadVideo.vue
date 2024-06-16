@@ -26,8 +26,10 @@
               :status="videosWS.processedVideo.frames" />
             <UploadTag class="tag" label="Анализ речи" :duration="videosWS.processedVideo.duration_speech"
               :status="videosWS.processedVideo.speech" />
-            <UploadTag class="tag" label="Распознавание лиц" :status="videosWS.processedVideo.faces" />
-            <UploadTag class="tag" label="Добавление в индекс лиц" :status="videosWS.processedVideo.indexed_faces" />
+            <UploadTag class="tag" label="Распознавание лиц" :status="videosWS.processedVideo.faces"
+              :duration="videosWS.processedVideo.duration_face_analysis" />
+            <UploadTag class="tag" label="Добавление в индекс лиц" :status="videosWS.processedVideo.indexed_faces"
+              :duration="videosWS.processedVideo.duration_indexed_face" />
             <UploadTag class="tag" label="Индексация" :duration="videosWS.processedVideo.duration_indexed"
               :status="videosWS.processedVideo.indexed" />
 

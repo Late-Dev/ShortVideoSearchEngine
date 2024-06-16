@@ -17,4 +17,6 @@ export type VideoWithStatus = {
   duration_frames: number;
   duration_speech: number;
   duration_indexed: number;
+  duration_indexed_face: number;
+  duration_face_analysis: number;
 };

@@ -46,6 +46,8 @@ export const useVideosStore = defineStore("videos", () => {
     duration_frames: 0,
     duration_speech: 0,
     duration_indexed: 0,
+    duration_indexed_face: 0,
+    duration_face_analysis: 0,
   });
 
   function subscribeOnVideo(id: string) {
@@ -69,6 +71,8 @@ export const useVideosStore = defineStore("videos", () => {
       duration_frames: 0,
       duration_speech: 0,
       duration_indexed: 0,
+      duration_indexed_face: 0,
+      duration_face_analysis: 0,
     };
   }
 
